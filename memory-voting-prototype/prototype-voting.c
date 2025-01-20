@@ -102,9 +102,15 @@ int main(int argc, char** argv) {
   int unsolved_errors = 0;
 
   for(int i = 0; i < NUM_TEST_LOOPS; i++) {
+
+    // Cause memory bit flips and then have the algorithm attempt
+    // to correct them
     simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, FLIP_RATE);
     correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
 
+    // Check to make sure the algorithm corrected every byte.
+    // If it didn't, increment the unsolved error count and
+    // correct it for the next iteration
     for(int k = 0; k < NUM_COPIES; k++) {
       for(int j = 0; j < DATA_SIZE; j++) {
         if(data_copies[k][j] != original_data[j]) {
