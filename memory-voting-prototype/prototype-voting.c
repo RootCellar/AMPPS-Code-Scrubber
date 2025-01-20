@@ -17,7 +17,7 @@
 
 // Definitions
 
-#define FLIP_RATE (0.001)
+#define FLIP_RATE (0.0001)
 #define NUM_COPIES (3)
 #define DATA_SIZE (16*1024)
 #define NUM_TEST_LOOPS (1*1000)
