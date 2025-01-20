@@ -57,7 +57,47 @@ void simulate_flips(char** data_copies, int num_copies, int data_size, float fli
 }
 
 void correct_errors(char** data_copies, int num_copies, int data_size) {
-  
+
+  char agreements[num_copies];
+
+  char most_agreements;
+  char most_agreed_value;
+
+  if(num_copies < 2) return;
+
+  for(int i = 0; i < data_size; i++) {
+
+    // Reset tracked agreements
+    for(int k = 0; k < num_copies; k++) agreements[k] = 0;
+    most_agreements = 0;
+    most_agreed_value = 0;
+
+    // Search forward for data copies that agree
+    // and keep track of how many are found
+    for(int k = 0; k < num_copies; k++)
+    for(int j = 1; j < num_copies; j++) {
+      if(data_copies[j][i] == data_copies[k][i]) {
+        agreements[k]++;
+      }
+    }
+
+    // Find the most agreed value
+    for(int k = 0; k < num_copies; k++) {
+      if(agreements[k] > most_agreements) {
+        most_agreements = agreements[k];
+        most_agreed_value = data_copies[k][i];
+      }
+    }
+
+    // Correct data copies to match
+    for(int k = 0; k < num_copies; k++) {
+      if(data_copies[k][i] != most_agreed_value) {
+        data_copies[k][i] = most_agreed_value;
+      }
+    }
+
+  }
+
 }
 
 // Main
