@@ -46,9 +46,11 @@ void simulate_flips(char** data_copies, int num_copies, int data_size, float fli
 
   for(int i = 0; i < num_copies; i++) {
     for(int k = 0; k < data_size; k++) {
-      random_roll = roll_flip_chance();
-      if(random_roll < flip_rate) {
-        data_copies[i][k] ^= random_bit();
+      for(int j = 0; j < 8; j++) {
+        random_roll = roll_flip_chance();
+        if(random_roll < flip_rate) {
+          data_copies[i][k] ^= 1 << j;
+        }
       }
     }
   }
