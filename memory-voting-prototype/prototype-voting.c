@@ -31,8 +31,8 @@ struct timespec get_time() {
   return time;
 }
 
-float roll_flip_chance() {
-  float random_value = rand() % FLIP_CHANCE_MOD;
+double roll_flip_chance() {
+  double random_value = rand() % FLIP_CHANCE_MOD;
   return random_value / FLIP_CHANCE_MOD;
 }
 
@@ -40,9 +40,9 @@ char random_bit() {
   return 1 << (rand() % 8);
 }
 
-void simulate_flips(char** data_copies, int num_copies, int data_size, float flip_rate) {
+void simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate) {
 
-  float random_roll;
+  double random_roll;
 
   for(int i = 0; i < num_copies; i++) {
     for(int k = 0; k < data_size; k++) {
