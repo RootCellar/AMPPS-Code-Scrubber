@@ -17,7 +17,7 @@
 
 // Definitions
 
-#define FLIP_RATE (1/(1000*1000))
+#define FLIP_RATE (1.0/(1000.0*1000.0))
 #define NUM_COPIES (3)
 #define DATA_SIZE (16*1024)
 #define NUM_TEST_LOOPS (1*1000)
@@ -33,7 +33,7 @@ struct timespec get_time() {
 
 double roll_flip_chance() {
   double random_value = rand() % FLIP_CHANCE_MOD;
-  return random_value / FLIP_CHANCE_MOD;
+  return random_value / (double) FLIP_CHANCE_MOD;
 }
 
 char random_bit() {
