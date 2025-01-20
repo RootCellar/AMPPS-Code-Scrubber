@@ -21,7 +21,7 @@
 #define NUM_COPIES (3)
 #define DATA_SIZE (16*1024)
 #define NUM_TEST_LOOPS (1*1000)
-#define FLIP_CHANCE_MOD (1000*1000)
+#define FLIP_CHANCE_MOD (1000*1000*100)
 
 // Functions
 
