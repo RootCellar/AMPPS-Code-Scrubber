@@ -75,7 +75,7 @@ void correct_errors(char** data_copies, int num_copies, int data_size) {
     // Search forward for data copies that agree
     // and keep track of how many are found
     for(int k = 0; k < num_copies; k++)
-    for(int j = 1; j < num_copies; j++) {
+    for(int j = k+1; j < num_copies; j++) {
       if(data_copies[j][i] == data_copies[k][i]) {
         agreements[k]++;
       }
