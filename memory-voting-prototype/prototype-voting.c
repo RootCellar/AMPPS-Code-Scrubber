@@ -40,9 +40,10 @@ char random_bit() {
   return 1 << (rand() % 8);
 }
 
-void simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate) {
+int simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate) {
 
   double random_roll;
+  int flips = 0;
 
   for(int i = 0; i < num_copies; i++) {
     for(int k = 0; k < data_size; k++) {
@@ -50,10 +51,13 @@ void simulate_flips(char** data_copies, int num_copies, int data_size, double fl
         random_roll = roll_flip_chance();
         if(random_roll < flip_rate) {
           data_copies[i][k] ^= 1 << j;
+          flips++;
         }
       }
     }
   }
+
+  return flips;
 }
 
 void correct_errors(char** data_copies, int num_copies, int data_size) {
