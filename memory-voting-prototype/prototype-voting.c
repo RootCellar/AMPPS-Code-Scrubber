@@ -22,6 +22,7 @@
 #define DATA_SIZE (16*1024)
 #define NUM_TEST_LOOPS (1*1000)
 #define FLIP_CHANCE_MOD (1000*1000*100)
+#define BITS_IN_BYTE (8)
 
 // Functions
 
@@ -37,7 +38,7 @@ double roll_flip_chance() {
 }
 
 char random_bit() {
-  return 1 << (rand() % 8);
+  return 1 << (rand() % BITS_IN_BYTE);
 }
 
 int simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate) {
@@ -47,7 +48,7 @@ int simulate_flips(char** data_copies, int num_copies, int data_size, double fli
 
   for(int i = 0; i < num_copies; i++) {
     for(int k = 0; k < data_size; k++) {
-      for(int j = 0; j < 8; j++) {
+      for(int j = 0; j < BITS_IN_BYTE; j++) {
         random_roll = roll_flip_chance();
         if(random_roll < flip_rate) {
           data_copies[i][k] ^= 1 << j;
