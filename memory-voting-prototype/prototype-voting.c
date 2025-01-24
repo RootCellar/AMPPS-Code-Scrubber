@@ -62,43 +62,69 @@ int simulate_flips(char** data_copies, int num_copies, int data_size, double fli
   return flips;
 }
 
-void correct_errors(char** data_copies, int num_copies, int data_size) {
+// Performs a bit-level correction of the byte at loc in data_copies
+void correct_bits(char** data_copies, int num_copies, int loc) {
 
   char agreements[num_copies];
 
   char most_agreements;
   char most_agreed_value;
 
-  if(num_copies < 2) return;
-
-  for(int i = 0; i < data_size; i++) {
+  for(int i = 0; i < BITS_IN_BYTE; i++) {
 
     // Reset tracked agreements
     for(int k = 0; k < num_copies; k++) agreements[k] = 0;
     most_agreements = 0;
     most_agreed_value = 0;
 
+    char current_bit = 1 << i;
+
     // Search forward for data copies that agree
     // and keep track of how many are found
     for(int k = 0; k < num_copies; k++)
-    for(int j = k+1; j < num_copies; j++) {
-      if(data_copies[j][i] == data_copies[k][i]) {
-        agreements[k]++;
+      for(int j = k+1; j < num_copies; j++) {
+        if((data_copies[j][loc] & current_bit) == (data_copies[k][loc] & current_bit)) {
+          agreements[k]++;
+        }
       }
-    }
 
     // Find the most agreed value
     for(int k = 0; k < num_copies; k++) {
       if(agreements[k] > most_agreements) {
         most_agreements = agreements[k];
-        most_agreed_value = data_copies[k][i];
+        most_agreed_value = data_copies[k][loc] & current_bit;
       }
     }
 
     // Correct data copies to match
     for(int k = 0; k < num_copies; k++) {
-      if(data_copies[k][i] != most_agreed_value) {
-        data_copies[k][i] = most_agreed_value;
+      if((data_copies[k][loc] & current_bit) != most_agreed_value) {
+        data_copies[k][loc] ^= current_bit;
+      }
+    }
+
+  }
+
+}
+
+// Searches through every byte and ensures that all data copies agree on
+// the value of each. In the event that the data copies don't agree on
+// the value of a particular byte, correct the copies of that byte
+// at the bit level.
+void correct_errors(char** data_copies, int num_copies, int data_size) {
+
+  if(num_copies < 2) return;
+
+  for(int i = 0; i < data_size; i++) {
+
+    char value = data_copies[0][i];
+
+    // Search forward through the data copies
+    // and make sure they all agree with the current byte.
+    // If they don't, perform a correction
+    for(int k = 1; k < num_copies; k++) {
+      if(data_copies[k][i] != value) {
+        correct_bits(data_copies, num_copies, i);
       }
     }
 
