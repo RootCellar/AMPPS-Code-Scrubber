@@ -41,6 +41,7 @@ char random_bit() {
   return 1 << (rand() % BITS_IN_BYTE);
 }
 
+// Returns how many bits this function flipped during the call
 int simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate) {
 
   double random_roll;
