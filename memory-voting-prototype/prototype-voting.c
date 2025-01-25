@@ -20,7 +20,7 @@
 #define FLIP_RATE (1.0/(1000.0*1000.0))
 #define NUM_COPIES (3)
 #define DATA_SIZE (16*1024)
-#define NUM_TEST_LOOPS (1*1000)
+#define NUM_TEST_LOOPS (1*100)
 #define FLIP_CHANCE_MOD (1000*1000*100)
 #define BITS_IN_BYTE (8)
 
@@ -179,28 +179,50 @@ int main(int argc, char** argv) {
   // Test it
 
   int unsolved_errors = 0;
+  int total_flips = 0;
 
-  for(int i = 0; i < NUM_TEST_LOOPS; i++) {
+  int new_flips;
+  int new_corrections;
 
-    // Cause memory bit flips and then have the algorithm attempt
-    // to correct them
-    simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, FLIP_RATE);
-    correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
+  double flip_rate = FLIP_RATE;
+  double flips_per_cycle;
 
-    // Check to make sure the algorithm corrected every byte.
-    // If it didn't, increment the unsolved error count and
-    // correct it for the next iteration
-    for(int k = 0; k < NUM_COPIES; k++) {
+  while(unsolved_errors < 1) {
+
+    new_flips = 0;
+    new_corrections = 0;
+
+    for(int i = 0; i < NUM_TEST_LOOPS; i++) {
+
+      // Cause memory bit flips and then have the algorithm attempt
+      // to correct them
+      new_flips += simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, flip_rate);
+      new_corrections += correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
+
+      // Check to make sure the algorithm corrected every byte.
+      // If it didn't, increment the unsolved error count and
+      // correct it for the next iteration
       for(int j = 0; j < DATA_SIZE; j++) {
-        if(data_copies[k][j] != original_data[j]) {
-          unsolved_errors++;
-          data_copies[k][j] = original_data[j];
+        for(int k = 0; k < NUM_COPIES; k++) {
+          if(data_copies[k][j] != original_data[j]) {
+            unsolved_errors++;
+            data_copies[k][j] = original_data[j];
+          }
         }
       }
     }
+
+    total_flips += new_flips;
+    flips_per_cycle = (double) new_flips/NUM_TEST_LOOPS;
+    flip_rate *= 1.05;
+
+    printf("%.20f flip_rate, %d flips, %f average flips per cycle\n", flip_rate, new_flips, flips_per_cycle);
+
   }
 
   printf("%d unsolved errors\n", unsolved_errors);
+  printf("%d total flips\n", total_flips);
+  printf("%.20f flip_rate\n", flip_rate);
 
   // Cleanup
 
