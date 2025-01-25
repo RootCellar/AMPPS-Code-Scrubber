@@ -63,12 +63,14 @@ int simulate_flips(char** data_copies, int num_copies, int data_size, double fli
 }
 
 // Performs a bit-level correction of the byte at loc in data_copies
-void correct_bits(char** data_copies, int num_copies, int loc) {
+char correct_bits(char** data_copies, int num_copies, int loc) {
 
   char agreements[num_copies];
 
   char most_agreements;
   char most_agreed_value;
+
+  char corrections = 0;
 
   for(int i = 0; i < BITS_IN_BYTE; i++) {
 
@@ -100,20 +102,24 @@ void correct_bits(char** data_copies, int num_copies, int loc) {
     for(int k = 0; k < num_copies; k++) {
       if((data_copies[k][loc] & current_bit) != most_agreed_value) {
         data_copies[k][loc] ^= current_bit;
+        corrections++;
       }
     }
 
   }
 
+  return corrections;
 }
 
 // Searches through every byte and ensures that all data copies agree on
 // the value of each. In the event that the data copies don't agree on
 // the value of a particular byte, correct the copies of that byte
 // at the bit level.
-void correct_errors(char** data_copies, int num_copies, int data_size) {
+int correct_errors(char** data_copies, int num_copies, int data_size) {
 
-  if(num_copies < 2) return;
+  if(num_copies < 2) return -1;
+
+  int corrections = 0;
 
   for(int i = 0; i < data_size; i++) {
 
@@ -124,12 +130,13 @@ void correct_errors(char** data_copies, int num_copies, int data_size) {
     // If they don't, perform a correction
     for(int k = 1; k < num_copies; k++) {
       if(data_copies[k][i] != value) {
-        correct_bits(data_copies, num_copies, i);
+        corrections += correct_bits(data_copies, num_copies, i);
       }
     }
 
   }
 
+  return corrections;
 }
 
 // Main
