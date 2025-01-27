@@ -182,14 +182,21 @@ struct data_copies_collection {
 };
 
 void cleanup_data_copy_collection(struct data_copies_collection* data_copies) {
-  if(data_copies->original_data != NULL) free(data_copies->original_data);
+  if(data_copies->original_data != NULL) {
+    free(data_copies->original_data);
+    data_copies->original_data = NULL;
+  }
 
   if(data_copies->data_copies != NULL) {
     for(int i = 0; i < data_copies->num_copies; i++) {
-      if(data_copies->data_copies[i] != NULL) free(data_copies->data_copies[i]);
+      if(data_copies->data_copies[i] != NULL) {
+        free(data_copies->data_copies[i]);
+        data_copies->data_copies[i] = NULL;
+      }
     }
 
     free(data_copies->data_copies);
+    data_copies->data_copies = NULL;
   }
 }
 
