@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 // Definitions
 
@@ -173,6 +174,68 @@ struct memory_correction_test_result test_memory_correction(char* original_data,
   return results;
 }
 
+struct data_copies_collection {
+  char* original_data;
+  char** data_copies;
+  int num_copies;
+  int data_size;
+};
+
+void cleanup_data_copy_collection(struct data_copies_collection* data_copies) {
+  if(data_copies->original_data != NULL) free(data_copies->original_data);
+
+  if(data_copies->data_copies != NULL) {
+    for(int i = 0; i < data_copies->num_copies; i++) {
+      if(data_copies->data_copies[i] != NULL) free(data_copies->data_copies[i]);
+    }
+
+    free(data_copies->data_copies);
+  }
+}
+
+struct data_copies_collection create_data_copy_collection(int copies, int size) {
+
+  struct data_copies_collection toRet =
+    (struct data_copies_collection) {.original_data = NULL, .data_copies = NULL, .num_copies = copies, .data_size = size};
+
+  size_t data_bytes = sizeof(char) * size;
+  size_t copy_pointers_list_size = sizeof(char*) * copies;
+
+  toRet.original_data = (char*) malloc(data_bytes);
+  if(toRet.original_data == NULL) {
+    printf("Unable to allocate memory for original_data\n");
+    return toRet;
+  }
+
+  toRet.data_copies = (char**) malloc(copy_pointers_list_size);
+  if(toRet.data_copies == NULL) {
+    printf("Unable to allocate memory for data_copies list\n");
+    cleanup_data_copy_collection(&toRet);
+    return toRet;
+  }
+  memset(toRet.data_copies, 0, copy_pointers_list_size);
+
+  for(int i = 0; i < NUM_COPIES; i++) {
+    toRet.data_copies[i] = (char*) malloc(data_bytes);
+    if(toRet.data_copies[i] == NULL) {
+      printf("Unable to allocate memory for memory copy %d\n", i);
+      cleanup_data_copy_collection(&toRet);
+      return toRet;
+    }
+  }
+
+  return toRet;
+}
+
+void fill_copies_with_random(struct data_copies_collection data_copies) {
+  for(int i = 0; i < data_copies.data_size; i++) {
+    data_copies.original_data[i] = rand();
+    for(int k = 0; k < data_copies.num_copies; k++) {
+      data_copies.data_copies[k][i] = data_copies.original_data[i];
+    }
+  }
+}
+
 // Main
 
 int main(int argc, char** argv) {
@@ -180,35 +243,11 @@ int main(int argc, char** argv) {
   // Setup
 
   // Allocate memory for arrays
-  char* original_data = (char*) malloc(sizeof(char) * DATA_SIZE);
-  if(original_data == NULL) {
-    printf("Unable to allocate memory for original_data\n");
-    return 1;
-  }
-
-  char** data_copies = (char**) malloc(sizeof(char*) * NUM_COPIES);
-  if(data_copies == NULL) {
-    printf("Unable to allocate memory for data_copies list\n");
-    return 1;
-  }
-
-  for(int i = 0; i < NUM_COPIES; i++) {
-    data_copies[i] = (char*) malloc(sizeof(char) * DATA_SIZE);
-    if(data_copies[i] == NULL) {
-      printf("Unable to allocate memory for memory copy %d\n", i);
-      return 1;
-    }
-  }
+  struct data_copies_collection data = create_data_copy_collection(NUM_COPIES, DATA_SIZE);
 
   // Fill original_data with random values and copy to data_copies
   srand(get_time().tv_nsec);
-
-  for(int i = 0; i < DATA_SIZE; i++) {
-    original_data[i] = rand();
-    for(int k = 0; k < NUM_COPIES; k++) {
-      data_copies[k][i] = original_data[i];
-    }
-  }
+  fill_copies_with_random(data);
 
   // Test it
 
@@ -220,7 +259,7 @@ int main(int argc, char** argv) {
 
   while(unsolved_errors < 1) {
 
-    struct memory_correction_test_result results = test_memory_correction(original_data, data_copies, NUM_COPIES, DATA_SIZE, NUM_TEST_LOOPS, flip_rate);
+    struct memory_correction_test_result results = test_memory_correction(data.original_data, data.data_copies, NUM_COPIES, DATA_SIZE, NUM_TEST_LOOPS, flip_rate);
 
     unsolved_errors += results.unsolved_errors;
     total_flips += results.num_flips;
@@ -237,7 +276,7 @@ int main(int argc, char** argv) {
 
   // Cleanup
 
-  free(original_data);
+  cleanup_data_copy_collection(&data);
 
   return 0;
 
