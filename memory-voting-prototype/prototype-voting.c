@@ -251,6 +251,10 @@ int main(int argc, char** argv) {
 
   // Allocate memory for arrays
   struct data_copies_collection data = create_data_copy_collection(NUM_COPIES, DATA_SIZE);
+  if(data.original_data == NULL) {
+    printf("Failed to create data_copies_collection\n");
+    exit(1);
+  }
 
   // Fill original_data with random values and copy to data_copies
   srand(get_time().tv_nsec);
