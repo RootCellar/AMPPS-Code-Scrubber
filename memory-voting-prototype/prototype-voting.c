@@ -139,6 +139,40 @@ int correct_errors(char** data_copies, int num_copies, int data_size) {
   return corrections;
 }
 
+struct memory_correction_test_result {
+  int num_flips;
+  int reported_corrections;
+  int unsolved_errors;
+};
+
+struct memory_correction_test_result test_memory_correction(char* original_data, char** data_copies, int num_copies, int data_size, int cycles, double flip_rate) {
+
+  struct memory_correction_test_result results =
+    (struct memory_correction_test_result) {.num_flips = 0, .reported_corrections = 0, .unsolved_errors = 0};
+
+  for(int i = 0; i < cycles; i++) {
+
+    // Cause memory bit flips and then have the algorithm attempt
+    // to correct them
+    results.num_flips += simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, flip_rate);
+    results.reported_corrections += correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
+
+    // Check to make sure the algorithm corrected every byte.
+    // If it didn't, increment the unsolved error count and
+    // correct it for the next iteration
+    for(int j = 0; j < DATA_SIZE; j++) {
+      for(int k = 0; k < NUM_COPIES; k++) {
+        if(data_copies[k][j] != original_data[j]) {
+          results.unsolved_errors++;
+          data_copies[k][j] = original_data[j];
+        }
+      }
+    }
+  }
+
+  return results;
+}
+
 // Main
 
 int main(int argc, char** argv) {
@@ -181,42 +215,19 @@ int main(int argc, char** argv) {
   int unsolved_errors = 0;
   int total_flips = 0;
 
-  int new_flips;
-  int new_corrections;
-
   double flip_rate = FLIP_RATE;
   double flips_per_cycle;
 
   while(unsolved_errors < 1) {
 
-    new_flips = 0;
-    new_corrections = 0;
+    struct memory_correction_test_result results = test_memory_correction(original_data, data_copies, NUM_COPIES, DATA_SIZE, NUM_TEST_LOOPS, flip_rate);
 
-    for(int i = 0; i < NUM_TEST_LOOPS; i++) {
-
-      // Cause memory bit flips and then have the algorithm attempt
-      // to correct them
-      new_flips += simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, flip_rate);
-      new_corrections += correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
-
-      // Check to make sure the algorithm corrected every byte.
-      // If it didn't, increment the unsolved error count and
-      // correct it for the next iteration
-      for(int j = 0; j < DATA_SIZE; j++) {
-        for(int k = 0; k < NUM_COPIES; k++) {
-          if(data_copies[k][j] != original_data[j]) {
-            unsolved_errors++;
-            data_copies[k][j] = original_data[j];
-          }
-        }
-      }
-    }
-
-    total_flips += new_flips;
-    flips_per_cycle = (double) new_flips/NUM_TEST_LOOPS;
+    unsolved_errors += results.unsolved_errors;
+    total_flips += results.num_flips;
+    flips_per_cycle = (double) results.num_flips/NUM_TEST_LOOPS;
     flip_rate *= 1.05;
 
-    printf("%.20f flip_rate, %d flips, %f average flips per cycle\n", flip_rate, new_flips, flips_per_cycle);
+    printf("%.20f flip_rate, %d flips, %f average flips per cycle\n", flip_rate, results.num_flips, flips_per_cycle);
 
   }
 
