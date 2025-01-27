@@ -267,6 +267,7 @@ int main(int argc, char** argv) {
 
   double flip_rate = FLIP_RATE;
   double flips_per_cycle;
+  double expected_flips;
 
   while(unsolved_errors < 1) {
 
@@ -274,10 +275,12 @@ int main(int argc, char** argv) {
 
     unsolved_errors += results.unsolved_errors;
     total_flips += results.num_flips;
+
     flips_per_cycle = (double) results.num_flips/NUM_TEST_LOOPS;
+    expected_flips = NUM_COPIES * DATA_SIZE * BITS_IN_BYTE * flip_rate;
     flip_rate *= 1.05;
 
-    printf("%.20f flip_rate, %d flips, %f average flips per cycle\n", flip_rate, results.num_flips, flips_per_cycle);
+    printf("%.20f flip_rate, %d flips, %f average flips per cycle (%f expected)\n", flip_rate, results.num_flips, flips_per_cycle, expected_flips);
 
   }
 
