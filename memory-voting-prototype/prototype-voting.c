@@ -132,6 +132,7 @@ int correct_errors(char** data_copies, int num_copies, int data_size) {
     for(int k = 1; k < num_copies; k++) {
       if(data_copies[k][i] != value) {
         corrections += correct_bits(data_copies, num_copies, i);
+        k = num_copies;
       }
     }
 
