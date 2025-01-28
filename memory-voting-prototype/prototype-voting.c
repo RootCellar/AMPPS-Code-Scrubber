@@ -156,14 +156,14 @@ struct memory_correction_test_result test_memory_correction(char* original_data,
 
     // Cause memory bit flips and then have the algorithm attempt
     // to correct them
-    results.num_flips += simulate_flips(data_copies, NUM_COPIES, DATA_SIZE, flip_rate);
-    results.reported_corrections += correct_errors(data_copies, NUM_COPIES, DATA_SIZE);
+    results.num_flips += simulate_flips(data_copies, num_copies, data_size, flip_rate);
+    results.reported_corrections += correct_errors(data_copies, num_copies, data_size);
 
     // Check to make sure the algorithm corrected every byte.
     // If it didn't, increment the unsolved error count and
     // correct it for the next iteration
-    for(int j = 0; j < DATA_SIZE; j++) {
-      for(int k = 0; k < NUM_COPIES; k++) {
+    for(int j = 0; j < data_size; j++) {
+      for(int k = 0; k < num_copies; k++) {
         if(data_copies[k][j] != original_data[j]) {
           results.unsolved_errors++;
           data_copies[k][j] = original_data[j];
@@ -223,7 +223,7 @@ struct data_copies_collection create_data_copy_collection(int copies, int size) 
   }
   memset(toRet.data_copies, 0, copy_pointers_list_size);
 
-  for(int i = 0; i < NUM_COPIES; i++) {
+  for(int i = 0; i < copies; i++) {
     toRet.data_copies[i] = (char*) malloc(data_bytes);
     if(toRet.data_copies[i] == NULL) {
       printf("Unable to allocate memory for memory copy %d\n", i);
