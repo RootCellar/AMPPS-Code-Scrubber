@@ -1,7 +1,5 @@
 # MSP430 BSL
 
----
-
 ## References
 
 MSP430FR5969 Product Details - https://www.ti.com/product/MSP430FR5969  
