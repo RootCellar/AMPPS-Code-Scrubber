@@ -43,3 +43,17 @@ void disable_incorrect_password_mass_erase() {
 }
 ```
 
+### Sending the Password
+
+The BSL of the MSP430 can be accessed by communicating with it via the 
+corresponding UART pins.
+
+![UART Protocol](media/bsl_uart_protocol.png)
+
+The application code sends the command by using the following format.
+
+![BSL RX Password Command](media/bsl_rx_password_command.png)
+
+Example command to unlock the Bootloader:
+
+![Password Example](media/example_password.png)
