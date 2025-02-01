@@ -31,13 +31,14 @@ In code, this can be done with the following:
 ```c++
 #define BSL_SIG_1 (0x0FF84)
 #define BSL_SIG_2 (0x0FF86)
+#define BSL_SIG_DISABLE_MASS_ERASE (0x0AAAA)
 
 void disable_incorrect_password_mass_erase() {
   uint16_t* ptr = BSL_SIG_1;
-  (*ptr) = 0x0AAAA;
+  (*ptr) = BSL_SIG_DISABLE_MASS_ERASE;
 
   ptr = BSL_SIG_2;
-  (*ptr) = 0x0AAAA;
+  (*ptr) = BSL_SIG_DISABLE_MASS_ERASE;
 }
 ```
 
