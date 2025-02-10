@@ -12,6 +12,15 @@ MSP430 BSL Guide - https://www.ti.com/lit/ug/slau550ab/slau550ab.pdf?ts=17376544
 
 BSL - **B**oot**S**trap **L**oader
 
+## BSL Invocation
+
+![BSL Jump](media/bsl_jump.png)
+
+- Jumping to the BSL clears RAM and resets the stack
+- Interrupts need to be disabled before invoking the BSL
+- Module registers that the BSL uses need to be cleared, because their settings can affect BSL behavior
+- In the BSL Action section, the "Rxx" parameters are registers
+
 ## Unlocking Bootloader Commands
 
 Before an application can command the bootloader, it must first unlock the bootloader by 
