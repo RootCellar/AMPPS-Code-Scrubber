@@ -221,7 +221,7 @@ struct data_copies_collection create_data_copy_collection(int copies, int size) 
     cleanup_data_copy_collection(&toRet);
     return toRet;
   }
-  memset(toRet.data_copies, 0, copy_pointers_list_size);
+  memset(toRet.data_copies, (int)NULL, copy_pointers_list_size);
 
   for(int i = 0; i < copies; i++) {
     toRet.data_copies[i] = (char*) malloc(data_bytes);
