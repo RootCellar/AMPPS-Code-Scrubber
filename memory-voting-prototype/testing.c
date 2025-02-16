@@ -32,6 +32,29 @@ int simulate_flips(char** data_copies, int num_copies, int data_size, double fli
   return flips;
 }
 
+int count_errors(char* original_data, char** data_copies, int num_copies, int data_size) {
+  int errors = 0;
+
+  for(int j = 0; j < data_size; j++) {
+    for(int k = 0; k < num_copies; k++) {
+      if(data_copies[k][j] != original_data[j]) {
+        errors++;
+        data_copies[k][j] = original_data[j];
+      }
+    }
+  }
+
+  return errors;
+}
+
+void copy_original_to_copies(char* original_data, char** data_copies, int num_copies, int data_size) {
+  for(int j = 0; j < data_size; j++) {
+    for(int k = 0; k < num_copies; k++) {
+      data_copies[k][j] = original_data[j];
+    }
+  }
+}
+
 struct memory_correction_test_result test_memory_correction(char* original_data, char** data_copies, int num_copies, int data_size, int cycles, double flip_rate) {
 
   struct memory_correction_test_result results =
@@ -47,14 +70,8 @@ struct memory_correction_test_result test_memory_correction(char* original_data,
     // Check to make sure the algorithm corrected every byte.
     // If it didn't, increment the unsolved error count and
     // correct it for the next iteration
-    for(int j = 0; j < data_size; j++) {
-      for(int k = 0; k < num_copies; k++) {
-        if(data_copies[k][j] != original_data[j]) {
-          results.unsolved_errors++;
-          data_copies[k][j] = original_data[j];
-        }
-      }
-    }
+    results.unsolved_errors += count_errors(original_data, data_copies, num_copies, data_size);
+    copy_original_to_copies(original_data, data_copies, num_copies, data_size);
   }
 
   return results;
