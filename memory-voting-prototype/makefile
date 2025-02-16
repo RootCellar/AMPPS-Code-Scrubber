@@ -26,5 +26,5 @@ test: all
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-prototype: memory_correction.o
-	$(CC) $(CFLAGS) -o $@ prototype-voting.c $<
+prototype: memory_correction.o testing.o
+	$(CC) $(CFLAGS) -o $@ prototype-voting.c $^
