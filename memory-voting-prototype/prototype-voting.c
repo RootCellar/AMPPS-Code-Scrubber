@@ -16,6 +16,8 @@
 #include <time.h>
 #include <string.h>
 
+#include "time.h"
+
 // Definitions
 
 #define FLIP_RATE (1.0/(1000.0*1000.0))
@@ -26,12 +28,6 @@
 #define BITS_IN_BYTE (8)
 
 // Functions
-
-struct timespec get_time() {
-  struct timespec time;
-  clock_gettime(CLOCK_REALTIME, &time);
-  return time;
-}
 
 double roll_flip_chance() {
   double random_value = rand() % FLIP_CHANCE_MOD;
@@ -270,9 +266,19 @@ int main(int argc, char** argv) {
   double flips_per_cycle;
   double expected_flips;
 
+  struct timespec start, end;
+  double time_spent;
+  double cycles_per_second;
+
   while(unsolved_errors < 1) {
 
+    start = get_time();
+
     struct memory_correction_test_result results = test_memory_correction(data.original_data, data.data_copies, NUM_COPIES, DATA_SIZE, NUM_TEST_LOOPS, flip_rate);
+
+    end = get_time();
+    time_spent = timespec_difference_seconds(start, end);
+    cycles_per_second = (double) NUM_TEST_LOOPS / time_spent;
 
     unsolved_errors += results.unsolved_errors;
     total_flips += results.num_flips;
@@ -280,7 +286,8 @@ int main(int argc, char** argv) {
     flips_per_cycle = (double) results.num_flips / NUM_TEST_LOOPS;
     expected_flips = NUM_COPIES * DATA_SIZE * BITS_IN_BYTE * flip_rate;
 
-    printf("%.20f flip_rate, %d flips, %f average flips per cycle (%f expected)\n", flip_rate, results.num_flips, flips_per_cycle, expected_flips);
+    printf("%.20f flip_rate, %d flips, %f average flips per cycle (%f expected), %f seconds, %f cycles per second\n",
+      flip_rate, results.num_flips, flips_per_cycle, expected_flips, time_spent, cycles_per_second);
 
     flip_rate *= 1.05;
 
