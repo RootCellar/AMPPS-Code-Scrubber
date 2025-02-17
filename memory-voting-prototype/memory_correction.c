@@ -1,5 +1,9 @@
 
+#include <stdint.h>
+
 #include "memory_correction.h"
+
+#define SEEK_TYPE char
 
 // Performs a bit-level correction of the byte at loc in data_copies
 char correct_bits(char** data_copies, int num_copies, int loc) {
@@ -57,19 +61,26 @@ char correct_bits(char** data_copies, int num_copies, int loc) {
 int correct_errors(char** data_copies, int num_copies, int data_size) {
 
   if(num_copies < 2) return -1;
+  if(data_size % sizeof(SEEK_TYPE) != 0) return -1;
+
+  SEEK_TYPE** data_copies_cast = (SEEK_TYPE**) data_copies;
 
   int corrections = 0;
 
-  for(int i = 0; i < data_size; i++) {
+  for(int i = 0; i < data_size / sizeof(SEEK_TYPE); i++) {
 
-    char value = data_copies[0][i];
+    char value = data_copies_cast[0][i];
 
     // Search forward through the data copies
     // and make sure they all agree with the current byte.
     // If they don't, perform a correction
     for(int k = 1; k < num_copies; k++) {
-      if(data_copies[k][i] != value) {
-        corrections += correct_bits(data_copies, num_copies, i);
+      if(data_copies_cast[k][i] != value) {
+
+        for(int j = 0; j < sizeof(SEEK_TYPE); j++) {
+          corrections += correct_bits(data_copies, num_copies, i * sizeof(SEEK_TYPE) + j);
+        }
+
         k = num_copies;
       }
     }
