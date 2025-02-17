@@ -1,6 +1,5 @@
 
 #include <stdlib.h>
-#include <stdint.h>
 
 #include "memory_correction.h"
 

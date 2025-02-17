@@ -1,6 +1,8 @@
 #ifndef MEMORY_CORRECTION_H
 #define MEMORY_CORRECTION_H
 
+#include <stdint.h>
+
 #define SEEK_TYPE char
 #define BITS_IN_BYTE (8)
 
