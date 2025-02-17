@@ -67,7 +67,7 @@ int correct_errors(char** data_copies, int num_copies, int data_size) {
 
   for(size_t i = 0; i < data_size / sizeof(SEEK_TYPE); i++) {
 
-    char value = data_copies_cast[0][i];
+    SEEK_TYPE value = data_copies_cast[0][i];
 
     // Search forward through the data copies
     // and make sure they all agree with the current byte.
