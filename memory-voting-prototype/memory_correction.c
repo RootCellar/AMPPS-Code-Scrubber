@@ -4,8 +4,6 @@
 
 #include "memory_correction.h"
 
-#define SEEK_TYPE char
-
 // Performs a bit-level correction of the byte at loc in data_copies
 char correct_bits(char** data_copies, int num_copies, int loc) {
 
