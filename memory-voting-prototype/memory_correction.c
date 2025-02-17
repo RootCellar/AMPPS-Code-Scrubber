@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #include "memory_correction.h"
@@ -67,7 +68,7 @@ int correct_errors(char** data_copies, int num_copies, int data_size) {
 
   int corrections = 0;
 
-  for(int i = 0; i < data_size / sizeof(SEEK_TYPE); i++) {
+  for(size_t i = 0; i < data_size / sizeof(SEEK_TYPE); i++) {
 
     char value = data_copies_cast[0][i];
 
@@ -77,7 +78,7 @@ int correct_errors(char** data_copies, int num_copies, int data_size) {
     for(int k = 1; k < num_copies; k++) {
       if(data_copies_cast[k][i] != value) {
 
-        for(int j = 0; j < sizeof(SEEK_TYPE); j++) {
+        for(size_t j = 0; j < sizeof(SEEK_TYPE); j++) {
           corrections += correct_bits(data_copies, num_copies, i * sizeof(SEEK_TYPE) + j);
         }
 
