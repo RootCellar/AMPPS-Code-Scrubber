@@ -9,7 +9,7 @@ OBJECTS=$(SOURCE:%.c=%.o)
 
 .PHONY: all clean test
 
-all: prototype
+all: prototype unit_tests
 
 clean:
 	rm -f prototype
@@ -25,6 +25,9 @@ test: all
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+unit_tests: memory_correction.o testing.o
+	$(CC) $(CFLAGS) -o $@ unit-tests.c $^
 
 prototype: memory_correction.o testing.o
 	$(CC) $(CFLAGS) -o $@ prototype-voting.c $^
