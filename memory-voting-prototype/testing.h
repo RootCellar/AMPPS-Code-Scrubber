@@ -21,6 +21,9 @@ double roll_flip_chance();
 int simulate_flips(char** data_copies, int num_copies, int data_size, double flip_rate);
 struct memory_correction_test_result test_memory_correction(char* original_data, char** data_copies, int num_copies, int data_size, int cycles, double flip_rate);
 
+int count_errors(char* original_data, char** data_copies, int num_copies, int data_size);
+void copy_original_to_copies(char* original_data, char** data_copies, int num_copies, int data_size);
+
 void cleanup_data_copy_collection(struct data_copies_collection* data_copies);
 struct data_copies_collection create_data_copy_collection(int copies, int size);
 void fill_copies_with_random(struct data_copies_collection data_copies);
