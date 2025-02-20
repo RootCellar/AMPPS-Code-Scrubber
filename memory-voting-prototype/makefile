@@ -27,7 +27,7 @@ test: all
 	$(CC) $(CFLAGS) -c $< -o $@
 
 unit_tests: memory_correction.o testing.o
-	$(CC) $(CFLAGS) -o $@ unit-tests.c $^
+	$(CC) $(CFLAGS) -o $@ unit_tests.c $^
 
 prototype: memory_correction.o testing.o
-	$(CC) $(CFLAGS) -o $@ prototype-voting.c $^
+	$(CC) $(CFLAGS) -o $@ prototype_voting.c $^
