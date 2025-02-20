@@ -22,6 +22,11 @@ static int num_tests_passed = 0;
         printf("\n  " "%s ** " name " ** %s" "\n\n", ANSI_COLOR_BRIGHT_YELLOW, ANSI_COLOR_RESET);\
         } while(0)
 
+#define TEST_NAME(name) \
+        do { \
+        printf("\n" "%s--- " name " --- %s" "\n", ANSI_COLOR_BRIGHT_CYAN, ANSI_COLOR_RESET);\
+        } while(0)
+
 void pass_test(const char* expr, const char* file, const char* func, int line, const char* name, int quiet_pass) {
   num_tests_passed++;
 

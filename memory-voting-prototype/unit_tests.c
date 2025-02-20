@@ -24,6 +24,7 @@ int main(int argc, char** argv) {
 
   SECTION("correct_bits");
 
+  TEST_NAME("Two copies fix a fully flipped third copy");
   {
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
@@ -40,6 +41,7 @@ int main(int argc, char** argv) {
     TEST(collection.data_copies[1][0] == original_data, "the second copy is not modified");
   }
 
+  TEST_NAME("3 copies with bit flips are corrected");
   {
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
