@@ -40,5 +40,21 @@ int main(int argc, char** argv) {
     TEST(collection.data_copies[1][0] == original_data, "the second copy is not modified");
   }
 
+  {
+    struct data_copies_collection collection = create_data_copy_collection(3, 1);
+
+    char original_data = 0b10101010;
+
+    collection.data_copies[0][0] = 0b10001111;
+    collection.data_copies[1][0] = 0b11111000;
+    collection.data_copies[2][0] = 0b00100010;
+
+    int fixes = correct_bits(collection.data_copies, 3, 0);
+    TEST(fixes == 8, "correct_bits reports making 8 fixes");
+    TEST(collection.data_copies[0][0] == original_data, "the first copy is fully corrected");
+    TEST(collection.data_copies[1][0] == original_data, "the second copy is fully corrected");
+    TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
+  }
+
   return 0;
 }
