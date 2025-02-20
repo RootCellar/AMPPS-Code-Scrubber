@@ -3,6 +3,8 @@
 
 #define FLIP_CHANCE_MOD (1000*1000*100)
 
+#define malloc(n) custom_malloc(n)
+
 struct memory_correction_test_result {
   int num_flips;
   int reported_corrections;
@@ -15,6 +17,8 @@ struct data_copies_collection {
   int num_copies;
   int data_size;
 };
+
+void* custom_malloc(size_t n);
 
 double roll_flip_chance();
 
