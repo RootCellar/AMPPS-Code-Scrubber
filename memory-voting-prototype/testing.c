@@ -48,7 +48,6 @@ int count_errors(char* original_data, char** data_copies, int num_copies, int da
     for(int k = 0; k < num_copies; k++) {
       if(data_copies[k][j] != original_data[j]) {
         errors++;
-        data_copies[k][j] = original_data[j];
       }
     }
   }
