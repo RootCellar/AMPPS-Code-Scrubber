@@ -56,5 +56,7 @@ int main(int argc, char** argv) {
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
   }
 
+  show_test_results();
+
   return 0;
 }
