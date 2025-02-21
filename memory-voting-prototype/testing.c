@@ -6,15 +6,6 @@
 #include "memory_correction.h"
 #include "testing.h"
 
-#undef malloc(n)
-void* custom_malloc(size_t n) {
-  void* ptr = malloc(n);
-  if(ptr != NULL) return ptr;
-  printf("Unable to allocate %lu byte(s)\n", n);
-  exit(EXIT_FAILURE);
-}
-#define malloc(n) custom_malloc(n)
-
 double roll_flip_chance() {
   double random_value = rand() % FLIP_CHANCE_MOD;
   return random_value / (double) FLIP_CHANCE_MOD;
@@ -145,4 +136,12 @@ void fill_copies_with_random(struct data_copies_collection data_copies) {
       data_copies.data_copies[k][i] = data_copies.original_data[i];
     }
   }
+}
+
+#undef malloc(n)
+void* custom_malloc(size_t n) {
+  void* ptr = malloc(n);
+  if(ptr != NULL) return ptr;
+  printf("Unable to allocate %lu byte(s)\n", n);
+  exit(EXIT_FAILURE);
 }
