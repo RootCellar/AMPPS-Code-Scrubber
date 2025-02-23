@@ -27,16 +27,7 @@ int main(int argc, char** argv) {
     collection.data_copies[i % num_copies][i] = ~original_byte;
   }
 
-  printf("%s\n Before Correction:\n\n%s", ANSI_COLOR_BRIGHT_CYAN, ANSI_COLOR_RESET);
-  print_data_copies_bits(collection);
-
-  int fixes = correct_errors(collection.data_copies, num_copies, (int)len);
-
-  printf("%s\n After Correction:\n\n%s", ANSI_COLOR_BRIGHT_CYAN, ANSI_COLOR_RESET);
-  print_data_copies_bits(collection);
-
-  printf("\n");
-  printf("%d fixes\n", fixes);
+  print_correct_errors_demo(num_copies, len, collection);
 
   return 0;
 }
