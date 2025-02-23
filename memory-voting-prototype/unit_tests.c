@@ -81,6 +81,8 @@ int main(int argc, char** argv) {
     TEST(collection.data_copies[4][0] == original_data, "the fifth copy is fully corrected");
   }
 
+  SECTION("correct_errors");
+
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 3 copies");
   {
     int num_copies = 3;
