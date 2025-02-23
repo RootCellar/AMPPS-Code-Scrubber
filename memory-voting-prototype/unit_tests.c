@@ -13,6 +13,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 
 #include "unit_tests.h"
 #include "memory_correction.h"
@@ -77,6 +79,46 @@ int main(int argc, char** argv) {
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
     TEST(collection.data_copies[3][0] == original_data, "the fourth copy is fully corrected");
     TEST(collection.data_copies[4][0] == original_data, "the fifth copy is fully corrected");
+  }
+
+  TEST_NAME("correct_errors properly uses correct_bits to synchronize 3 copies");
+  {
+    int num_copies = 3;
+    size_t len = 4*32;
+    struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
+
+    char original_byte = 0b11001100;
+    memset(collection.original_data, original_byte, len);
+    copy_original_to_copies(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size);
+
+    for(size_t i = 0; i < len; i++) {
+      collection.data_copies[i % num_copies][i] = ~original_byte;
+    }
+    TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == len, "len erroneous bytes before correct_errors");
+
+    int fixes = correct_errors(collection.data_copies, num_copies, len);
+    TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
+  }
+
+  TEST_NAME("correct_errors properly uses correct_bits to synchronize 5 copies");
+  {
+    int num_copies = 5;
+    size_t len = 4*32;
+    struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
+
+    char original_byte = 0b11001100;
+    memset(collection.original_data, original_byte, len);
+    copy_original_to_copies(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size);
+
+    for(size_t i = 0; i < len; i++) {
+      collection.data_copies[i % num_copies][i] = ~original_byte;
+    }
+    TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == len, "len erroneous bytes before correct_errors");
+
+    int fixes = correct_errors(collection.data_copies, num_copies, len);
+    TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
   }
 
   show_test_results();
