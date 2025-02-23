@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 3 copies");
   {
     int num_copies = 3;
-    size_t len = 4*32;
+    size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
 
     char original_byte = 0b11001100;
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 5 copies");
   {
     int num_copies = 5;
-    size_t len = 4*32;
+    size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
 
     char original_byte = 0b11001100;
