@@ -9,7 +9,7 @@ OBJECTS=$(SOURCE:%.c=%.o)
 
 .PHONY: all clean test
 
-all: prototype unit_tests
+all: prototype unit_tests demo
 
 clean:
 	rm -f prototype
@@ -31,3 +31,6 @@ unit_tests: memory_correction.o testing.o
 
 prototype: memory_correction.o testing.o
 	$(CC) $(CFLAGS) -o $@ prototype_voting.c $^
+
+demo: memory_correction.o testing.o util.o
+	$(CC) $(CFLAGS) -o $@ demo.c $^
