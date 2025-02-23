@@ -1,6 +1,8 @@
 #ifndef TESTING_H
 #define TESTING_H
 
+#include "stddef.h"
+
 #define FLIP_CHANCE_MOD (1000*1000*100)
 
 #define malloc(n) custom_malloc(n)
