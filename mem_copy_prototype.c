@@ -7,7 +7,10 @@
 
 volatile uint16_t copy_successes = 0; // Should equal TEXT_SIZE ideally
 
-uint16_t SaveRegister = 0;                                  // Save MPUSAM register to restore state after interrupt
+void turn_on_LED(void) {
+    P1OUT |= BIT0;
+    return;
+}
 
 void copy_text_section(void) {
     MPUSAM |= MPUSEG1WE;
@@ -97,9 +100,15 @@ void startup(void) {
     clockSystemInit();
     MPUInit();
 
+
     // Disable the GPIO power-on default high-impedance mode to activate
     // previously configured port settings
     PM5CTL0 &= ~LOCKLPM5;
+
+    // FOR DEBUGGING
+    // LED 1.0
+    P1DIR |= BIT0;
+    //P1OUT |= BIT0;
 
     copy_text_section();
 }
@@ -121,27 +130,17 @@ void main(void) {
         }
     }
 
+    uint32_t func_addr = (void*)turn_on_LED;
+    uint16_t jump_dst = func_addr - 0x10000; // How far the function is from start of code
+    jump_dst += 0x4400; // TEXT_ADDR_DST, but CCS throws a fit for some reason
+
+    __disable_interrupt();
+    // Clear stack pointer here?
+    ((void (*)()) jump_dst)(); // We do return from this jump
+    __enable_interrupt();
+
     while(1) {
         __bis_SR_register(GIE + LPM0_bits);     // Enter LPM0, enable interrupt
         __no_operation();                       // for debugger
-    }
-}
-
-
-// DMA interrupt
-#pragma vector=DMA_VECTOR
-__interrupt void DMA_ISR(void) {
-    switch(__even_in_range(DMAIV, DMAIV_DMA2IFG)) {
-        case DMAIV_NONE: break;
-        case DMAIV_DMA0IFG: // DMA0IFG = DMA Channel 0
-            SaveRegister = MPUSAM;
-            MPUSAM &= ~MPUSEG1WE;
-            MPUSAM &= ~MPUSEG3RE;
-            MPUSAM = SaveRegister;
-            break;
-        case DMAIV_DMA1IFG: // DMA1IFG = DMA Channel 1
-            break;
-        case DMAIV_DMA2IFG: break; // DMA2IFG = DMA Channel 2
-        default: break;
     }
 }
