@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "memory_correction.h"
+#include "environment.h"
 
 // Performs a bit-level correction of the byte at loc in data_copies
 char correct_bits(char** data_copies, int num_copies, int loc) {
