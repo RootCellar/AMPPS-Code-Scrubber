@@ -35,6 +35,7 @@ struct timespec get_time() {
 
 double roll_flip_chance() {
   double random_value = rand() % FLIP_CHANCE_MOD;
+  //double random_value = 10000000;
   return random_value / (double) FLIP_CHANCE_MOD;
 }
 
@@ -153,7 +154,7 @@ struct memory_correction_test_result test_memory_correction(char* original_data,
     (struct memory_correction_test_result) {.num_flips = 0, .reported_corrections = 0, .unsolved_errors = 0};
 
   for(int i = 0; i < cycles; i++) {
-
+    // printf("%d\n", i);
     // Cause memory bit flips and then have the algorithm attempt
     // to correct them
     results.num_flips += simulate_flips(data_copies, num_copies, data_size, flip_rate);
