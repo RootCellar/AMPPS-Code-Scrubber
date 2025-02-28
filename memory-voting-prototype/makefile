@@ -4,20 +4,38 @@ LDFLAGS =
 
 LINTER=cppcheck --enable=all --inconclusive --max-ctu-depth=4 -j 4 --library=posix
 
-.PHONY: all clean test
+SOURCE=$(wildcard *.c)
+HEADERS=$(wildcard *.h)
+OBJECTS=$(SOURCE:%.c=%.o)
+EXECUTABLES=prototype unit_tests demo
 
-all: prototype
+.PHONY: all clean check lint run_tests run_demo
+
+all: $(EXECUTABLES)
 
 clean:
-	rm -f prototype
+	rm -f $(EXECUTABLES)
+	rm -f $(OBJECTS)
 
-check: all test lint
+check: all run_tests lint
 
 lint:
 	 $(LINTER) .
 
-test: all
-	time ./prototype
+run_tests: unit_tests
+	./unit_tests
 
-prototype:
-	$(CC) $(CFLAGS) -o $@ prototype-voting.c
+run_demo: demo
+	./demo
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+unit_tests: memory_correction.o testing.o terminal_color.o
+	$(CC) $(CFLAGS) -o $@ unit_tests.c $^
+
+prototype: memory_correction.o testing.o
+	$(CC) $(CFLAGS) -o $@ prototype_voting.c $^
+
+demo: memory_correction.o testing.o util.o terminal_color.o
+	$(CC) $(CFLAGS) -o $@ demo.c $^
