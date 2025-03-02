@@ -47,7 +47,7 @@ char correct_bits(char** data_copies, int num_copies, int loc) {
     for(k = 0; k < num_copies; k++) {
       if((data_copies[k][loc] & current_bit) != most_agreed_value) {
         UNLOCK_MEMORY_SEGMENT(k);
-        data_copies[k][loc] ^= current_bit;
+        DATA_WRITE(data_copies, k, loc, DATA_READ(data_copies, k, loc) ^ current_bit);
         LOCK_MEMORY_SEGMENT(k);
         corrections++;
       }

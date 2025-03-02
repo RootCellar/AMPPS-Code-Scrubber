@@ -17,6 +17,7 @@
 
 
 #include "unit_tests.h"
+#include "environment.h"
 #include "memory_correction.h"
 #include "testing.h"
 
@@ -28,6 +29,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("Two copies fix a fully flipped third copy");
   {
+    set_environment_memory_segments(3);
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
     char original_data = 0b10101010;
@@ -45,6 +47,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("3 copies with bit flips are corrected");
   {
+    set_environment_memory_segments(3);
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
     char original_data = 0b10101010;
@@ -62,6 +65,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("5 copies with bit flips are corrected");
   {
+    set_environment_memory_segments(5);
     struct data_copies_collection collection = create_data_copy_collection(5, 1);
 
     char original_data = 0b10101010;
@@ -85,6 +89,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 3 copies");
   {
+    set_environment_memory_segments(3);
     int num_copies = 3;
     size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
@@ -105,6 +110,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 5 copies");
   {
+    set_environment_memory_segments(5);
     int num_copies = 5;
     size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
