@@ -8,11 +8,14 @@
 #define NUM_MEMORY_SEGMENTS (num_memory_segments)
 #define MAX_MEMORY_SEGMENTS (100)
 
+#define SEGMENT_LOCKED 0
+#define SEGMENT_UNLOCKED 1
+
 #define MEMORY_SEGMENT_FAIL_FAST 1
 
 static char num_memory_segments = 0;
 
-char segment_locks[MAX_MEMORY_SEGMENTS] = {0};
+char segment_locks[MAX_MEMORY_SEGMENTS] = {SEGMENT_LOCKED};
 
 void __lock_memory_segment(int which) {
   if(which >= NUM_MEMORY_SEGMENTS || which < 0) {
@@ -21,7 +24,7 @@ void __lock_memory_segment(int which) {
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
   }
 
-  segment_locks[which] = 0;
+  segment_locks[which] = SEGMENT_LOCKED;
 }
 
 void __unlock_memory_segment(int which) {
@@ -31,7 +34,7 @@ void __unlock_memory_segment(int which) {
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
   }
 
-  segment_locks[which] = 1;
+  segment_locks[which] = SEGMENT_UNLOCKED;
 }
 
 void __data_write(char** data_copies, int which, int loc, char value) {
@@ -41,7 +44,7 @@ void __data_write(char** data_copies, int which, int loc, char value) {
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
   }
 
-  if(segment_locks[which] != 0) {
+  if(segment_locks[which] != SEGMENT_LOCKED) {
     data_copies[which][loc] = value;
   } else {
     printf("\n%sAttempted to write to memory segment %d[%d] while it was locked%s\n",
@@ -69,7 +72,7 @@ int memory_segment_is_locked(int which) {
 
 int all_memory_segments_locked() {
   for(int i = 0; i < MAX_MEMORY_SEGMENTS; i++) {
-    if(segment_locks[i] != 0) return 0;
+    if(segment_locks[i] != SEGMENT_LOCKED) return 0;
   }
   return 1;
 }
