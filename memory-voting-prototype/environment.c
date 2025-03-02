@@ -24,6 +24,7 @@ void __lock_memory_segment(int which) {
     printf("\n%sAttempted to lock invalid memory segment %d%s\n",
       MEMORY_SEGMENTATION_FAIL_COLOR, which, ANSI_COLOR_RESET);
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
+    else return;
   }
 
   segment_locks[which] = SEGMENT_LOCKED;
@@ -34,6 +35,7 @@ void __unlock_memory_segment(int which) {
     printf("\n%sAttempted to unlock invalid memory segment %d%s\n",
       MEMORY_SEGMENTATION_FAIL_COLOR, which, ANSI_COLOR_RESET);
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
+    else return;
   }
 
   segment_locks[which] = SEGMENT_UNLOCKED;
@@ -44,6 +46,7 @@ void __data_write(char** data_copies, int which, int loc, char value) {
     printf("\n%sAttempted to write to invalid memory segment %d[%d]%s\n",
       MEMORY_SEGMENTATION_FAIL_COLOR, which, loc, ANSI_COLOR_RESET);
     if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
+    else return;
   }
 
   if(segment_locks[which] != SEGMENT_LOCKED) {
