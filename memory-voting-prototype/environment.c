@@ -15,10 +15,22 @@ static char num_memory_segments = 0;
 char segment_locks[MAX_MEMORY_SEGMENTS] = {0};
 
 void __lock_memory_segment(int which) {
+  if(which >= NUM_MEMORY_SEGMENTS || which < 0) {
+    printf("\n%sAttempted to lock invalid memory segment %d%s\n",
+      ANSI_COLOR_RED, which, ANSI_COLOR_RESET);
+    if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
+  }
+
   segment_locks[which] = 0;
 }
 
 void __unlock_memory_segment(int which) {
+  if(which >= NUM_MEMORY_SEGMENTS || which < 0) {
+    printf("\n%sAttempted to unlock invalid memory segment %d%s\n",
+      ANSI_COLOR_RED, which, ANSI_COLOR_RESET);
+    if(MEMORY_SEGMENT_FAIL_FAST) exit(EXIT_FAILURE);
+  }
+
   segment_locks[which] = 1;
 }
 
