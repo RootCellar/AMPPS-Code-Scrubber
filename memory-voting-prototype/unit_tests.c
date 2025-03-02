@@ -40,6 +40,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 3, 0);
     TEST(fixes == 8, "correct_bits reports making 8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[2][0] == original_data, "two copies fix a fully flipped third copy");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is not modified");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is not modified");
@@ -58,6 +59,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 3, 0);
     TEST(fixes == 8, "correct_bits reports making 8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is fully corrected");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is fully corrected");
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
@@ -78,6 +80,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 5, 0);
     TEST(fixes == 13, "correct_bits reports making 13 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is fully corrected");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is fully corrected");
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
@@ -105,6 +108,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_errors(collection.data_copies, num_copies, len);
     TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
   }
 
@@ -126,6 +130,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_errors(collection.data_copies, num_copies, len);
     TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
   }
 

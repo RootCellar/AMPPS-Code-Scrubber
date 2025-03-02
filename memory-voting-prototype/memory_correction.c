@@ -29,7 +29,7 @@ char correct_bits(char** data_copies, int num_copies, int loc) {
     // and keep track of how many are found
     for(k = 0; k < num_copies; k++) {
       for(j = k + 1; j < num_copies; j++) {
-        if((data_copies[j][loc] & current_bit) == (data_copies[k][loc] & current_bit)) {
+        if((DATA_READ(data_copies, j, loc) & current_bit) == (DATA_READ(data_copies, k, loc) & current_bit)) {
           agreements[k]++;
         }
       }
@@ -39,13 +39,13 @@ char correct_bits(char** data_copies, int num_copies, int loc) {
     for(k = 0; k < num_copies; k++) {
       if(agreements[k] > most_agreements) {
         most_agreements = agreements[k];
-        most_agreed_value = data_copies[k][loc] & current_bit;
+        most_agreed_value = DATA_READ(data_copies, k, loc) & current_bit;
       }
     }
 
     // Correct data copies to match
     for(k = 0; k < num_copies; k++) {
-      if((data_copies[k][loc] & current_bit) != most_agreed_value) {
+      if((DATA_READ(data_copies, k, loc) & current_bit) != most_agreed_value) {
         UNLOCK_MEMORY_SEGMENT(k);
         DATA_WRITE(data_copies, k, loc, DATA_READ(data_copies, k, loc) ^ current_bit);
         LOCK_MEMORY_SEGMENT(k);

@@ -38,6 +38,10 @@ void __data_write(char** data_copies, int which, int loc, char value) {
   }
 }
 
+char __data_read(char** data_copies, int which, int loc) {
+  return data_copies[which][loc];
+}
+
 /*
  * Functions for tests on a real computer
  * these should *not* exist or be called when running on the MSP430 Microcontroller
@@ -45,4 +49,15 @@ void __data_write(char** data_copies, int which, int loc, char value) {
 
 void set_environment_memory_segments(char num) {
   num_memory_segments = num;
+}
+
+int memory_segment_is_locked(int which) {
+  return segment_locks[which];
+}
+
+int all_memory_segments_locked() {
+  for(int i = 0; i < num_memory_segments; i++) {
+    if(segment_locks[i] != 0) return 0;
+  }
+  return 1;
 }
