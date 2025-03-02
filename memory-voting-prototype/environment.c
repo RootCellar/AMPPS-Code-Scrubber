@@ -56,7 +56,7 @@ int memory_segment_is_locked(int which) {
 }
 
 int all_memory_segments_locked() {
-  for(int i = 0; i < num_memory_segments; i++) {
+  for(int i = 0; i < MAX_MEMORY_SEGMENTS; i++) {
     if(segment_locks[i] != 0) return 0;
   }
   return 1;
