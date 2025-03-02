@@ -34,7 +34,7 @@ run_demo: demo
 unit_tests: memory_correction.o environment.o testing.o terminal_color.o
 	$(CC) $(CFLAGS) -o $@ unit_tests.c $^
 
-prototype: memory_correction.o environment.o testing.o
+prototype: memory_correction.o environment.o testing.o terminal_color.o
 	$(CC) $(CFLAGS) -o $@ prototype_voting.c $^
 
 demo: memory_correction.o environment.o testing.o util.o terminal_color.o
