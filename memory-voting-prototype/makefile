@@ -12,9 +12,9 @@ ASSEMBLIES=$(SOURCE:%.c=%.asm)
 
 EXECUTABLES=prototype unit_tests demo
 
-.PHONY: all clean check lint assemblies objects run_tests run_demo
+.PHONY: all clean check lint assemblies objects executables run_tests run_demo
 
-all: $(EXECUTABLES)
+all: executables
 
 clean:
 	rm -f $(EXECUTABLES)
@@ -34,6 +34,7 @@ run_demo: demo
 
 assemblies: $(ASSEMBLIES)
 objects: $(OBJECTS)
+executables: $(EXECUTABLES)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
