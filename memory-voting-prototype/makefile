@@ -6,16 +6,20 @@ LINTER=cppcheck --enable=all --inconclusive --max-ctu-depth=4 -j 4 --library=pos
 
 SOURCE=$(wildcard *.c)
 HEADERS=$(wildcard *.h)
+
 OBJECTS=$(SOURCE:%.c=%.o)
+ASSEMBLIES=$(SOURCE:%.c=%.asm)
+
 EXECUTABLES=prototype unit_tests demo
 
-.PHONY: all clean check lint run_tests run_demo
+.PHONY: all clean check lint assemblies objects run_tests run_demo
 
 all: $(EXECUTABLES)
 
 clean:
 	rm -f $(EXECUTABLES)
 	rm -f $(OBJECTS)
+	rm -f $(ASSEMBLIES)
 
 check: all run_tests lint
 
@@ -28,8 +32,14 @@ run_tests: unit_tests
 run_demo: demo
 	./demo
 
+assemblies: $(ASSEMBLIES)
+objects: $(OBJECTS)
+
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+%.asm: %.c
+	$(CC) $(CFLAGS) -S -o $@ $<
 
 unit_tests: memory_correction.o environment.o testing.o terminal_color.o
 	$(CC) $(CFLAGS) -o $@ unit_tests.c $^
