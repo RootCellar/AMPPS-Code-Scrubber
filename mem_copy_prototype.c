@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 #define TEXT_ADDR_SRC ((uint32_t*) 0x10000)
-#define TEXT_ADDR_DST ((uint32_t*) 0x4400)
+#define TEXT_ADDR_DST ((uint32_t*) 0x6100)
 #define TEXT_SIZE   0x300  // Adjust size based on your code size
 
 volatile uint16_t copy_successes = 0; // Should equal TEXT_SIZE ideally
@@ -13,9 +13,7 @@ void turn_on_LED(void) {
 }
 
 void copy_text_section(void) {
-    MPUSAM |= MPUSEG1WE;
-    //MPUSAM |= MPUSEG2WE;
-    //MPUSAM |= MPUSEG2RE;
+    MPUSAM |= MPUSEG2WE;
     MPUSAM |= MPUSEG3RE;
     memcpy(TEXT_ADDR_DST, TEXT_ADDR_SRC, TEXT_SIZE);
 }
@@ -56,8 +54,8 @@ void allPortsToZero(void) {
 void MPUInit(void) {
     // Configure MPU
     MPUCTL0 = MPUPW;                          // Write PWD to access MPU registers
-    MPUSEGB1 = 0x6000;
-    MPUSEGB2 = 0xFFFF;                        // Borders are assigned to segments
+    MPUSEGB1 = 0x600;
+    MPUSEGB2 = 0xFFF;                        // Borders are assigned to segments
 
     //  Segment 1    - Execute, Read
     //  Segment 2    - Execute, Read
@@ -134,10 +132,10 @@ void main(void) {
     uint16_t jump_dst = func_addr - 0x10000; // How far the function is from start of code
     jump_dst += 0x4400; // TEXT_ADDR_DST, but CCS throws a fit for some reason
 
-    __disable_interrupt();
+    //__disable_interrupt();
     // Clear stack pointer here?
-    ((void (*)()) jump_dst)(); // We do return from this jump
-    __enable_interrupt();
+    //((void (*)()) jump_dst)(); // We do return from this jump
+    //__enable_interrupt();
 
     while(1) {
         __bis_SR_register(GIE + LPM0_bits);     // Enter LPM0, enable interrupt
