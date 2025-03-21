@@ -2,7 +2,9 @@
  * memory_writer.c
  *
  *  Created on: Mar 20, 2025
- *      Author: wisea
+ *      Author: Mary Bollling
+ *
+ *      Almost all code in this file was written by Bruce Smith
  */
 
 

@@ -163,8 +163,16 @@ int main(void)
 	data_copies[1] = (char*) 0x6000;
 	data_copies[2] = (char*) 0x10000;
 
-	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST, TEXT_SIZE);
 
+	MPUSAM |= MPUSEG1WE;
+	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_ONE, TEXT_SIZE);
+	MPUSAM &= ~MPUSEG1WE;
+	MPUSAM |= MPUSEG2WE;
+	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
+	MPUSAM &= ~MPUSEG2WE;
+
+    __no_operation();
+    __no_operation();
 
 
 	while(1){
@@ -178,7 +186,7 @@ int main(void)
 	    if(runItBack == 1){
 	    	needsTransmit = 1;
 	    	beforeTicks = Ticks;
-	    	copy_successes = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST, TEXT_SIZE);
+	    	copy_successes = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
 	    	runCorrections = correct_errors(data_copies, 3, len);
 
 	    	tickDiff = Ticks - beforeTicks;
