@@ -159,8 +159,8 @@ int main(void)
 	int len = 16384;
 
 	char* data_copies[3];
-	data_copies[0] = (char*) 0x4000;
-	data_copies[1] = (char*) 0x6000;
+	data_copies[0] = (char*) 0x4950;
+	data_copies[1] = (char*) 0x6100;
 	data_copies[2] = (char*) 0x10000;
 
 
