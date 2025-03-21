@@ -35,7 +35,7 @@ uint8_t tickSenderIndex = 0;
 int needsTransmit = 0;
 
 #define CHAR_STR_LEN 5
-char tickString[CHAR_STR_LEN] = "1234 ";
+char tickString[CHAR_STR_LEN] = "1203 ";
 
 uint16_t Ticks = 0;
 int runCorrections;
@@ -122,7 +122,7 @@ void int_to_chars(char* str, int len, uint16_t num) {
   int i;
 
 
-  uint16_t base = 1;
+  uint32_t base = 1;
   for(i = 0; i < len; i++) {
     base *= 10;
   }
@@ -178,9 +178,8 @@ int main(void)
 	    if(runItBack == 1){
 	    	needsTransmit = 1;
 	    	beforeTicks = Ticks;
-	    	runCorrections = correct_errors(data_copies, 3, len);
-
 	    	copy_successes = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST, TEXT_SIZE);
+	    	runCorrections = correct_errors(data_copies, 3, len);
 
 	    	tickDiff = Ticks - beforeTicks;
 	    	P4OUT ^= BIT6;
