@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "memory_correction.h"
+#include "environment.h"
 #include "terminal_color.h"
 #include "testing.h"
 #include "time.h"
@@ -11,6 +12,7 @@
 int main(int argc, char** argv) {
 
   int num_copies = 3;
+  set_environment_memory_segments(num_copies);
   size_t len = 8*1;
 
   if(len % sizeof(SEEK_TYPE) != 0) {

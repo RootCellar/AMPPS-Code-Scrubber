@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include "memory_correction.h"
+#include "environment.h"
 #include "testing.h"
 #include "time.h"
 
@@ -45,6 +46,8 @@ int main(int argc, char** argv) {
     printf("Failed to create data_copies_collection\n");
     exit(1);
   }
+
+  set_environment_memory_segments(NUM_COPIES);
 
   // Fill original_data with random values and copy to data_copies
   srand(get_time().tv_nsec);
