@@ -72,7 +72,7 @@ void set_environment_memory_segments(char num) {
 }
 
 int memory_segment_is_locked(int which) {
-  return segment_locks[which];
+  return !segment_locks[which];
 }
 
 int all_memory_segments_locked() {
