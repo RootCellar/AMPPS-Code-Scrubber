@@ -3,3 +3,4 @@ unit_tests
 demo
 
 *.o
+*.asm

@@ -17,6 +17,7 @@
 
 
 #include "unit_tests.h"
+#include "environment.h"
 #include "memory_correction.h"
 #include "testing.h"
 
@@ -28,6 +29,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("Two copies fix a fully flipped third copy");
   {
+    set_environment_memory_segments(3);
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
     char original_data = 0b10101010;
@@ -38,6 +40,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 3, 0);
     TEST(fixes == 8, "correct_bits reports making 8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[2][0] == original_data, "two copies fix a fully flipped third copy");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is not modified");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is not modified");
@@ -45,6 +48,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("3 copies with bit flips are corrected");
   {
+    set_environment_memory_segments(3);
     struct data_copies_collection collection = create_data_copy_collection(3, 1);
 
     char original_data = 0b10101010;
@@ -55,6 +59,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 3, 0);
     TEST(fixes == 8, "correct_bits reports making 8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is fully corrected");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is fully corrected");
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
@@ -62,6 +67,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("5 copies with bit flips are corrected");
   {
+    set_environment_memory_segments(5);
     struct data_copies_collection collection = create_data_copy_collection(5, 1);
 
     char original_data = 0b10101010;
@@ -74,6 +80,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_bits(collection.data_copies, 5, 0);
     TEST(fixes == 13, "correct_bits reports making 13 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(collection.data_copies[0][0] == original_data, "the first copy is fully corrected");
     TEST(collection.data_copies[1][0] == original_data, "the second copy is fully corrected");
     TEST(collection.data_copies[2][0] == original_data, "the third copy is fully corrected");
@@ -85,6 +92,7 @@ int main(int argc, char** argv) {
 
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 3 copies");
   {
+    set_environment_memory_segments(3);
     int num_copies = 3;
     size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
@@ -100,11 +108,13 @@ int main(int argc, char** argv) {
 
     int fixes = correct_errors(collection.data_copies, num_copies, len);
     TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
   }
 
   TEST_NAME("correct_errors properly uses correct_bits to synchronize 5 copies");
   {
+    set_environment_memory_segments(5);
     int num_copies = 5;
     size_t len = 8*32;
     struct data_copies_collection collection = create_data_copy_collection(num_copies, len);
@@ -120,6 +130,7 @@ int main(int argc, char** argv) {
 
     int fixes = correct_errors(collection.data_copies, num_copies, len);
     TEST(fixes == len * 8, "correct_errors reports making len*8 fixes");
+    TEST(all_memory_segments_locked() == 1, "all memory segments are locked after test completes");
     TEST(count_errors(collection.original_data, collection.data_copies, collection.num_copies, collection.data_size) == 0, "0 errors after correct_errors");
   }
 
