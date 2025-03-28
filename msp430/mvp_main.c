@@ -174,11 +174,12 @@ int main(void)
 
 	MPUSAM |= MPUSEG1WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_ONE, TEXT_SIZE);
-	*(TEXT_ADDR_DST_ONE + 1) = 6;	// Self-inflicted bit flip
-	MPUSAM &= ~MPUSEG1WE;
+	*(TEXT_ADDR_DST_ONE + 1) = 7;	// Self-inflicted bit flip
+	*(TEXT_ADDR_DST_ONE + 10) = 'q';	// Self-inflicted bit flip
+	//MPUSAM &= ~MPUSEG1WE;
 	MPUSAM |= MPUSEG2WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
-	MPUSAM &= ~MPUSEG2WE;
+	//MPUSAM &= ~MPUSEG2WE;
 
     __no_operation();
     __no_operation();
