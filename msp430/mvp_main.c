@@ -34,14 +34,15 @@ int runItBack = 0;
 uint8_t tickSenderIndex = 0;
 int needsTransmit = 0;
 
-#define CHAR_STR_LEN 5
-char tickString[CHAR_STR_LEN] = "1203 ";
+#define CHAR_STR_LEN 18
+#define NUM_STR_LEN  5		// keeps track of how many digits a number has
+char tickString[CHAR_STR_LEN] = "1111 2222 3333 ";
 
 uint16_t Ticks = 0;
 int runCorrections;
 
 int beforeTicks, tickDiff;
-uint16_t copy_successes;
+uint16_t copySuccesses;
 
 // Functions
 
@@ -127,7 +128,7 @@ void int_to_chars(char* str, int len, uint16_t num) {
     base *= 10;
   }
   base /= 100;
-  str[len] = '\0';
+  str[len] = ' ';
 
   int idx = 0;
   for(i = len-1; i > 0 && base != 0; i--) {
@@ -142,6 +143,13 @@ void int_to_chars(char* str, int len, uint16_t num) {
 
 int main(void)
 {
+	// TODO:
+	/*
+	 Make tick string longer (3 5-digit numbers)			- done
+	 Make sure scrub reports the correct number of fixes
+	 Verify that the data segments are the same				- done
+	 */
+
 	// Setup
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
 	PM5CTL0 &= ~LOCKLPM5;		// THIS LINE IS VERY IMPORTANT!!!!!!!!
@@ -156,7 +164,7 @@ int main(void)
 	P4DIR |= BIT6;
 	P4OUT &= ~BIT6;
 
-	int len = 16384;
+	//int len = 16384;
 
 	char* data_copies[3];
 	data_copies[0] = (char*) 0x4950;
@@ -166,6 +174,7 @@ int main(void)
 
 	MPUSAM |= MPUSEG1WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_ONE, TEXT_SIZE);
+	*(TEXT_ADDR_DST_ONE + 1) = 6;	// Self-inflicted bit flip
 	MPUSAM &= ~MPUSEG1WE;
 	MPUSAM |= MPUSEG2WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
@@ -186,14 +195,19 @@ int main(void)
 	    if(runItBack == 1){
 	    	needsTransmit = 1;
 	    	beforeTicks = Ticks;
-	    	copy_successes = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
-	    	runCorrections = correct_errors(data_copies, 3, len);
+	    	copySuccesses = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
+	    	runCorrections = correct_errors(data_copies, 3, TEXT_SIZE);
 
 	    	tickDiff = Ticks - beforeTicks;
 	    	P4OUT ^= BIT6;
 	    	runItBack = 0;
 
-	    	int_to_chars(tickString, CHAR_STR_LEN, copy_successes);
+	    	int_to_chars(tickString, NUM_STR_LEN + 1, runCorrections);
+	    	tickString[NUM_STR_LEN] = ' ';
+	    	int_to_chars(tickString + NUM_STR_LEN + 1, NUM_STR_LEN + 1, copySuccesses);
+	    	tickString[2*NUM_STR_LEN + 1] = ' ';
+	    	copySuccesses = verify_same_mem_segments(TEXT_ADDR_SRC, TEXT_ADDR_DST_ONE, TEXT_SIZE);
+	    	int_to_chars(tickString + 2*(NUM_STR_LEN) + 2, NUM_STR_LEN + 1, copySuccesses);
 	    	tickString[CHAR_STR_LEN - 1] = ' ';
 	    }
 
