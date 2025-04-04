@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -Wextra
+CFLAGS = -g -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion
 LDFLAGS =
 
 LINTER=cppcheck --enable=all --inconclusive --max-ctu-depth=4 -j 4 --library=posix
