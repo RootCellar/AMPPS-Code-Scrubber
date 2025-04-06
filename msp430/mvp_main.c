@@ -1,10 +1,11 @@
 /*
  *
- * Author: Darian Marvel
+ * Authors: Mary Bolling and Darian Marvel
  * Created 1/19/2025
- * Last edited by Mary Bolling on 3/20/2025
+ * Last edited by Mary Bolling on 3/27/2025
  *
- * Prototype memory voting and correction for AMPPS
+ * Testing memory voting and correction for AMPPS
+ * on a real MSP430FR5969
  *
 */
 
