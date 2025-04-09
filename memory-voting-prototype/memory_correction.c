@@ -9,6 +9,7 @@ char agreements[NUM_CODE_COPIES];
 #endif
 
 // Performs a bit-level correction of the byte at loc in data_copies
+__attribute__ ((always_inline))
 char correct_bits(char** data_copies, int num_copies, int loc) {
 
   int i, j, k;
