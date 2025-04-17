@@ -12,9 +12,10 @@ ASSEMBLIES=$(SOURCE:%.c=%.asm)
 
 EXECUTABLES=prototype unit_tests demo
 
-.PHONY: all clean check lint assemblies objects executables run_tests run_demo
+.PHONY: all everything clean check lint assemblies objects executables run_tests run_demo
 
 all: executables
+everything: assemblies objects executables
 
 clean:
 	rm -f $(EXECUTABLES)
