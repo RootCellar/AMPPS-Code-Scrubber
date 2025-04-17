@@ -63,13 +63,27 @@ This return value can be ignored if you have no use for it
 
 ### Calling `correct_errors` In a Different Copy of Code
 
+Example:
+
 ```c++
+int booted_copy = 2;
+int copy_to_run_from = 1;
+
 uintptr_t ptr = (uintptr_t) correct_errors;
-ptr -= (uintptr_t) data_copies[2];
-ptr += (uintptr_t) data_copies[1];
+ptr -= (uintptr_t) data_copies[booted_copy];
+ptr += (uintptr_t) data_copies[copy_to_run_from];
 int (*func)(char**, int, int) = (int (*)(char**,int,int)) ptr;
-runCorrections = func(data_copies, NUM_COPIES, TEXT_SIZE);
+int32_t corrections = func(data_copies, NUM_DATA_COPIES, DATA_SIZE);
 ```
+
+Line-by-line Explanation:
+1. Get the memory address of the `correct_errors` function and convert it to a number
+2. Convert `data_copies[booted_copy]` to a number and subtract from `ptr` to find the offset
+of `correct_errors` from the beginning of the program's code
+3. Convert `data_copies[copy_to_run_from]` to a number and add, to compute where `correct_errors` is
+located in FRAM memory segment 2
+4. Convert the `ptr` memory address from a number to a function pointer
+5. Call the function and get the return value
 
 ## Notes
 
