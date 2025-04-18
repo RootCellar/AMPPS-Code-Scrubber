@@ -12,12 +12,14 @@ IN ORDER of which FRAM memory segment they are in.
 For example:
 
 ```c++
+#pragma PERSISTENT(data_copies)
 const char* data_copies[3] = { (char*)0x4950, (char*)0x6100, (char*)0x10000 };
 ```
 
 1. `0x4950` is where the copy of code in segment 1 is located
 2. `0x6100` is where the copy of code in segment 2 is located
 3. `0x10000` is where the copy of code in segment 3 is located
+4. `#pragma PERSISTENT` is used on `data_copies` to store it in FRAM.
 
 Change these values as appropriate.
 
@@ -42,7 +44,7 @@ Notes:
 for different scrubs
 * These values do **not** have to be defined as constants, but they probably should be.
 * Because of how `environment.h` is implemented for the microcontroller,
-`NUM_DATA_COPIES` **can not** be any value other than `3`. This can be changed
+`NUM_DATA_COPIES` **can not** be any value other than `3`. However, this can be changed
 by modifying `environment.h`
 
 ### Call `correct_errors`
@@ -52,7 +54,7 @@ Once the required information is known, you can run the algorithm to fix bit fli
 Call `correct_errors:`
 
 ```c++
-int32_t corrections = correct_errors(data_copies, NUM_CODE_COPIES, DATA_SIZE);
+int32_t corrections = correct_errors(data_copies, NUM_DATA_COPIES, DATA_SIZE);
 ```
 
 Notes:
