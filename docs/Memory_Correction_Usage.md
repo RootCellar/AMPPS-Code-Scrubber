@@ -74,7 +74,7 @@ int copy_to_run_from = 1;
 uintptr_t ptr = (uintptr_t) correct_errors;
 ptr -= (uintptr_t) data_copies[booted_copy];
 ptr += (uintptr_t) data_copies[copy_to_run_from];
-int (*func)(char**, int, int) = (int (*)(char**,int,int)) ptr;
+int32_t (*func)(char**, int, int32_t) = (int (*)(char**,int,int32_t)) ptr;
 int32_t corrections = func(data_copies, NUM_DATA_COPIES, DATA_SIZE);
 ```
 
