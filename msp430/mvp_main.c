@@ -1,10 +1,19 @@
 /*
  *
+<<<<<<< HEAD
  * Author: Darian Marvel
  * Created 1/19/2025
  * Last edited by Mary Bolling on 3/20/2025
  *
  * Prototype memory voting and correction for AMPPS
+=======
+ * Authors: Mary Bolling and Darian Marvel
+ * Created 1/19/2025
+ * Last edited by Mary Bolling on 3/27/2025
+ *
+ * Testing memory voting and correction for AMPPS
+ * on a real MSP430FR5969
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
  *
 */
 
@@ -12,14 +21,23 @@
 // Includes
 
 #include <msp430fr5969.h>
+<<<<<<< HEAD
 #include "memory_writer.h"
 #include <stdlib.h>
 #include <stdio.h>
+=======
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#include "memory_writer.h"
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 #include "memory_correction.h"
 
 
 // Definitions
 
+<<<<<<< HEAD
 #define FLIP_RATE (1.0/(1000.0*1000.0))
 #define NUM_COPIES (3)
 #define DATA_SIZE (16*1024)
@@ -28,6 +46,12 @@
 #define BITS_IN_BYTE (8)
 
 
+=======
+#define NUM_COPIES (3)
+#define DATA_SIZE (16*1024)
+#define BITS_IN_BYTE (8)
+
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 // Please, God, forgive me
 int i, j, k;
 int runItBack = 0;
@@ -146,37 +170,61 @@ int main(void)
 	// TODO:
 	/*
 	 Make tick string longer (3 5-digit numbers)			- done
+<<<<<<< HEAD
 	 Make sure scrub reports the correct number of fixes
 	 Verify that the data segments are the same				- done
 	 */
+=======
+	 Make sure scrub reports the correct number of fixes    - done
+	 Verify that the data segments are the same				- done
+	*/
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 
 	// Setup
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
 	PM5CTL0 &= ~LOCKLPM5;		// THIS LINE IS VERY IMPORTANT!!!!!!!!
 
 	clockSystemInit();
+<<<<<<< HEAD
 	// Initialize the chip's UART capacity
 	UARTInit();
 	ticksTimerInit();
 	MPUInit();
+=======
+	UARTInit();
+	ticksTimerInit();
+	MPUInit();
+
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	P1DIR |= BIT0;
 	P1OUT &= ~BIT0;
 	P4DIR |= BIT6;
 	P4OUT &= ~BIT6;
 
+<<<<<<< HEAD
 	//int len = 16384;
 
+=======
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	char* data_copies[3];
 	data_copies[0] = (char*) 0x4950;
 	data_copies[1] = (char*) 0x6100;
 	data_copies[2] = (char*) 0x10000;
 
+<<<<<<< HEAD
 
+=======
+    // Create code duplicates and artificially place errors to fix
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	MPUSAM |= MPUSEG1WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_ONE, TEXT_SIZE);
 	*(TEXT_ADDR_DST_ONE + 1) = 7;	// Self-inflicted bit flip
 	*(TEXT_ADDR_DST_ONE + 10) = 'q';	// Self-inflicted bit flip
 	MPUSAM &= ~MPUSEG1WE;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	MPUSAM |= MPUSEG2WE;
 	copy_text_section(TEXT_ADDR_SRC, TEXT_ADDR_DST_TWO, TEXT_SIZE);
 	MPUSAM &= ~MPUSEG2WE;
@@ -184,13 +232,19 @@ int main(void)
     __no_operation();
     __no_operation();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	while(1){
 	    __bis_SR_register(GIE + LPM0_bits);     // Enter LPM0, enable interrupt
 	    __no_operation();                       // for debugger
 	    __no_operation();                       // SET BREAKPOINT HERE
+<<<<<<< HEAD
 		// Do the stuff
 
+=======
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 
 		// Send the time
 	    if(runItBack == 1){
@@ -203,6 +257,10 @@ int main(void)
 	    	P4OUT ^= BIT6;
 	    	runItBack = 0;
 
+<<<<<<< HEAD
+=======
+	        // Generate output string to send over UART
+>>>>>>> 8bcbada62ca2a6056c211b0f67eadf762774b618
 	    	int_to_chars(tickString, NUM_STR_LEN + 1, runCorrections);
 	    	tickString[NUM_STR_LEN] = ' ';
 	    	int_to_chars(tickString + NUM_STR_LEN + 1, NUM_STR_LEN + 1, copySuccesses);

@@ -4,12 +4,19 @@
 #include "memory_correction.h"
 #include "environment.h"
 
+#ifdef SCRUBBING_ON_MSP430
+char agreements[NUM_CODE_COPIES];
+#endif
+
 // Performs a bit-level correction of the byte at loc in data_copies
+__attribute__ ((always_inline))
 char correct_bits(char** data_copies, int num_copies, int loc) {
 
   int i, j, k;
 
+#ifndef SCRUBBING_ON_MSP430
   char agreements[num_copies];
+#endif
 
   char most_agreements;
   char most_agreed_value;
