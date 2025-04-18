@@ -7,7 +7,7 @@
 
 In order to call `correct_errors`, you need to have a list containing the
 memory locations of the copies of data. In the list, these must be
-in order of which FRAM memory segment they are in.
+IN ORDER of which FRAM memory segment they are in.
 
 For example:
 
@@ -95,6 +95,21 @@ located in FRAM memory segment 2
 #### `correct_bits`
 
 * Should not be used directly
+* Called by `correct_errors`
+* Fixes the errors found by `correct_errors`
+* Operates on a bit-by-bit basis and is unaffected by the `SEEK_TYPE`
+
+### Copying code to other segments
+
+Copying code to other segments is done via `memcpy`. Make sure to unlock the segment of code you are trying to write to before trying to write to it. The actual call to it should look something like this:
+
+```c++
+memcpy(DST_pointer, SRC_pointer, num_bytes);
+```
+
+* `DST_pointer` is your destination address
+* `SRC_pointer` is your source address
+* `num_bytes` should be the same as `DATA_SIZE`
 
 ## Notes
 
