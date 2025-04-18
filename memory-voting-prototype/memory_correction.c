@@ -10,7 +10,7 @@ char agreements[NUM_CODE_COPIES];
 
 // Performs a bit-level correction of the byte at loc in data_copies
 __attribute__ ((always_inline))
-char correct_bits(char** data_copies, int num_copies, int loc) {
+char correct_bits(char** data_copies, int num_copies, int32_t loc) {
 
   int i, j, k;
 
@@ -69,7 +69,7 @@ char correct_bits(char** data_copies, int num_copies, int loc) {
 // the value of each. In the event that the data copies don't agree on
 // the value of a particular byte, correct the copies of that byte
 // at the bit level.
-int correct_errors(char** data_copies, int num_copies, int data_size) {
+int32_t correct_errors(char** data_copies, int num_copies, int32_t data_size) {
 
   SEEK_TYPE** data_copies_cast = (SEEK_TYPE**) data_copies;
 
