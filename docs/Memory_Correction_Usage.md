@@ -85,6 +85,17 @@ located in FRAM memory segment 2
 4. Convert the `ptr` memory address from a number to a function pointer
 5. Call the function and get the return value
 
+### Descriptions of the Functions
+
+#### `correct_errors`
+
+* Seeks through the data copies using `SEEK_TYPE` to determine whether the copies
+"agree" about the data at each memory location
+
+#### `correct_bits`
+
+* Should not be used directly
+
 ## Notes
 
 * The algorithm supports using any number of copies of code, arranged in any way.
