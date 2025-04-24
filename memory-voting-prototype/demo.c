@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
   int num_copies = 3;
   set_environment_memory_segments(num_copies);
-  size_t len = 8*1;
+  size_t len = 4*1;
 
   if(len % sizeof(SEEK_TYPE) != 0) {
     printf("%slen is not evenly divisible by SEEK_TYPE size!%s\n", ANSI_COLOR_BRIGHT_RED, ANSI_COLOR_RESET);
