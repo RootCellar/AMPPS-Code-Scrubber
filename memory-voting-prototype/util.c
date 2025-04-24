@@ -17,6 +17,7 @@ void print_bits(char c) {
 
 void print_data_copies_bits(struct data_copies_collection collection) {
   for(int i = 0; i < collection.num_copies; i++) {
+    printf("Code Copy #%d: ", i);
     for(int k = 0; k < collection.data_size; k++) {
       print_bits(collection.data_copies[i][k]);
       printf("  ");
