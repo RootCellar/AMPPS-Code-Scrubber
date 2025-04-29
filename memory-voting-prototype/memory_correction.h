@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define SEEK_TYPE char
+#define SEEK_TYPE int16_t
 #define BITS_IN_BYTE (8)
 
 char correct_bits(char** data_copies, int num_copies, int32_t loc);
