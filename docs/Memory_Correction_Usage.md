@@ -37,8 +37,8 @@ Change the value of `DATA_SIZE` to the size of the data segment that will be scr
 This value **must** be evenly divisible by the number of bytes in `SEEK_TYPE` in `memory_correction.h`.
 
 For example, if `SEEK_TYPE` is `int16_t`, then `DATA_SIZE` must be evenly divisible by `2`.
-Note that `SEEK_TYPE` can be changed. You will probably want to set `SEEK_TYPE` to `int16_t`
-if you are using this code on an MSP430FR5969, as the MSP has a 16-bit processor.
+If `SEEK_TYPE` is `char`, then `DATA_SIZE` can be anything, etc.
+Note that `SEEK_TYPE` can be changed.
 
 Notes:
 * You can change the names of these constants
