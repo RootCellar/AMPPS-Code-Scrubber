@@ -4,61 +4,47 @@
 #include "memory_correction.h"
 #include "environment.h"
 
-#ifdef SCRUBBING_ON_MSP430
-char agreements[NUM_CODE_COPIES];
-#endif
-
 // Performs a bit-level correction of the byte at loc in data_copies
 __attribute__ ((always_inline))
 char correct_bits(char** data_copies, int num_copies, int32_t loc) {
 
-  int i, j, k;
+  int i, j;
 
-#ifndef SCRUBBING_ON_MSP430
-  char agreements[num_copies];
-#endif
+  char one_votes;
+  char zero_votes;
+  char current_bit = 1;
 
-  char most_agreements;
   char most_agreed_value;
 
   char corrections = 0;
 
   for(i = 0; i < BITS_IN_BYTE; i++) {
 
-    // Reset tracked agreements
-    for(k = 0; k < num_copies; k++) agreements[k] = 0;
-    most_agreements = 0;
-    most_agreed_value = 0;
+    // Reset variables
+    one_votes = 0;
+    zero_votes = 0;
 
-    char current_bit = 1 << i;
-
-    // Search forward for data copies that agree
-    // and keep track of how many are found
-    for(k = 0; k < num_copies; k++) {
-      for(j = k + 1; j < num_copies; j++) {
-        if((DATA_READ(data_copies, j, loc) & current_bit) == (DATA_READ(data_copies, k, loc) & current_bit)) {
-          agreements[k]++;
-        }
-      }
+    // Count zeros and ones votes
+    for(j = 0; j < num_copies; j++) {
+      if((DATA_READ(data_copies, j, loc) & current_bit) != 0) one_votes++;
+      else zero_votes++;
     }
 
     // Find the most agreed value
-    for(k = 0; k < num_copies; k++) {
-      if(agreements[k] > most_agreements) {
-        most_agreements = agreements[k];
-        most_agreed_value = DATA_READ(data_copies, k, loc) & current_bit;
-      }
-    }
+    if(one_votes > zero_votes) most_agreed_value = current_bit;
+    else most_agreed_value = 0;
 
     // Correct data copies to match
-    for(k = 0; k < num_copies; k++) {
-      if((DATA_READ(data_copies, k, loc) & current_bit) != most_agreed_value) {
-        UNLOCK_MEMORY_SEGMENT(k);
-        DATA_WRITE(data_copies, k, loc, DATA_READ(data_copies, k, loc) ^ current_bit);
-        LOCK_MEMORY_SEGMENT(k);
+    for(j = 0; j < num_copies; j++) {
+      if((DATA_READ(data_copies, j, loc) & current_bit) != most_agreed_value) {
+        UNLOCK_MEMORY_SEGMENT(j);
+        DATA_WRITE(data_copies, j, loc, DATA_READ(data_copies, j, loc) ^ current_bit);
+        LOCK_MEMORY_SEGMENT(j);
         corrections++;
       }
     }
+
+    current_bit <<= 1;
 
   }
 
