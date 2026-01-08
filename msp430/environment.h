@@ -2,13 +2,6 @@
 #define ENVIRONMENT_H
 
 /*
- * Environment Settings
-*/
-
-// Defines the size of the static agreements list
-#define NUM_CODE_COPIES 3
-
-/*
  * MSP430 Microcontroller environment-specific code
 */
 
